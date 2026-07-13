@@ -23,5 +23,10 @@ jobs:
           pip install -e ".[test]"
       - name: Test
         run: python -m pytest -q
+      # Exit codes follow the SAT competition convention: 10 = SATISFIABLE,
+      # 20 = UNSATISFIABLE. Both are successful runs, so the step has to say so
+      # -- otherwise CI reads a correct UNSAT answer as a crashed process.
       - name: Every UNSAT answer must come with a proof that verifies
-        run: python -m cdcl php 6
+        run: |
+          python -m cdcl php 6 && rc=0 || rc=$?
+          test "$rc" -eq 20
