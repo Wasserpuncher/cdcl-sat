@@ -33,6 +33,17 @@ That is on purpose. **A checker as clever as the solver is a checker that can
 share the solver's bugs.** The whole value of the thing is that it is dumb enough
 to be obviously right.
 
+And if you don't trust that one either — fair, it lives in the same repository as
+the solver — the proof leaves the building in the standard format:
+
+```console
+$ python -m cdcl php 6 --proof-out php.drat --cnf-out php.cnf
+$ drat-trim php.cnf php.drat        # someone else's checker, someone else's code
+```
+
+`drat-trim` was written by other people for other solvers. It owes nothing to
+anything here, and it will tell you whether the proof holds.
+
 The price is real, and here it is:
 
 | | solving | checking the proof |
@@ -105,7 +116,7 @@ program do: bump into a theorem.
 
 ```console
 $ python -m pytest -q
-201 passed
+209 passed
 ```
 
 The solver is checked against an oracle that cannot be wrong: **brute force**,
@@ -132,7 +143,7 @@ tamper-detection.
 - **The proof checker is quadratic** and becomes the bottleneck well before the
   solver does. Deliberate — see above — but it means million-clause proofs are
   out of reach.
-- **No proof deletion lines.** The DRUP output is monotone (clauses are only
+- **No proof deletion lines.** The DRAT output is monotone (clauses are only
   added), which is sound but makes long proofs slower to check than they need
   to be.
 - **No clause minimization**, no inprocessing, no XOR reasoning, no

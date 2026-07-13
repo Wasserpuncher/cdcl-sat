@@ -22,7 +22,7 @@ wrong, and nobody could tell.
 
 from __future__ import annotations
 
-from .dimacs import CNF
+from .dimacs import CNF, lit_from_dimacs, lit_to_dimacs
 
 UNDEF = -1
 
@@ -99,6 +99,48 @@ def check(cnf: CNF, proof: list[list[int]]) -> tuple[bool, str]:
         clauses.append(list(clause))
 
     return True, f"{len(proof)} clauses verified, ending in the empty clause"
+
+
+def to_drat(proof: list[list[int]]) -> str:
+    """Write the proof in the standard DRAT text format.
+
+    This is the format SAT competitions require and that `drat-trim` reads. It
+    is deliberately plain: DIMACS literals, one clause per line, each terminated
+    by a 0. The empty clause -- the end of every UNSAT proof -- is a lone `0`.
+
+    Emitting it matters more than it looks. It means the checker in this repo is
+    not the last word: anyone can run the proof through drat-trim, which was
+    written by other people for other solvers, and get an answer that owes
+    nothing to any code here.
+
+    (No `d` deletion lines: this solver's proof only ever adds clauses. That is
+    sound -- deletions are an optimisation for the checker, not a requirement --
+    but it does make long proofs slower to check than they need to be.)
+    """
+    lines = []
+    for clause in proof:
+        literals = " ".join(str(lit_to_dimacs(lit)) for lit in clause)
+        lines.append(f"{literals} 0".strip())
+    return "\n".join(lines) + "\n"
+
+
+def from_drat(text: str) -> list[list[int]]:
+    """Read a DRAT text proof back into internal literals."""
+    proof: list[list[int]] = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("c"):
+            continue
+        if line.startswith("d "):
+            continue                      # deletion: sound to ignore when checking
+        clause = []
+        for token in line.split():
+            value = int(token)
+            if value == 0:
+                break
+            clause.append(lit_from_dimacs(value))
+        proof.append(clause)
+    return proof
 
 
 def brute_force(cnf: CNF) -> dict[int, bool] | None:

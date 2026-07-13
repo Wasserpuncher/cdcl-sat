@@ -11,11 +11,11 @@ derivation of the empty clause that `check` verifies independently.
 """
 
 from .dimacs import CNF, parse
-from .proof import brute_force, check, is_rup
+from .proof import brute_force, check, from_drat, is_rup, to_drat
 from .solver import Solver, solve
 
 __all__ = ["CNF", "parse", "solve", "Solver", "check", "is_rup", "brute_force",
-           "dimacs"]
+           "to_drat", "from_drat", "dimacs"]
 __version__ = "1.0.0"
 
 from . import dimacs  # noqa: E402  -- re-exported for `from cdcl import dimacs`
