@@ -156,6 +156,7 @@ tamper-detection.
 
 ## Install
 
+<!-- readme-check: skip=clones-this-repo-into-itself -->
 ```console
 $ git clone https://github.com/Wasserpuncher/cdcl-sat
 $ cd cdcl-sat
