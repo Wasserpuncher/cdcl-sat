@@ -18,9 +18,13 @@ wrong and nobody could tell.
 ```console
 $ python -m cdcl php 6            # 7 pigeons into 6 holes
 s UNSATISFIABLE
-  proof: 1074 clauses, verified in 1153 ms
+  proof: 1074 clauses, verified in ~1153 ms
   VERIFIED: 1074 clauses verified, ending in the empty clause
 ```
+
+The clause count is exact — it is a property of the search, not of the machine.
+The verification time carries a `~` for the reason every timing here does: it is
+the laptop talking, not the solver.
 
 ## The checker is the point, and it is deliberately stupid
 
@@ -36,6 +40,7 @@ to be obviously right.
 And if you don't trust that one either — fair, it lives in the same repository as
 the solver — the proof leaves the building in the standard format:
 
+<!-- readme-check: skip=drat-trim-is-someone-elses-tool-and-is-not-installed-here -->
 ```console
 $ python -m cdcl php 6 --proof-out php.drat --cnf-out php.cnf
 $ drat-trim php.cnf php.drat        # someone else's checker, someone else's code
@@ -95,7 +100,8 @@ minutes on its own — it is not a quick command.)
 
 That is *pure Python*. MiniSat does 200 variables in single-digit milliseconds and
 this is not a competitor to anything — a real solver is C++ and thirty years of
-tuning. What it is, is complete and correct and 981 lines you can read.
+tuning. What it is, is complete and correct and
+<!-- readme-check: 981 = cat cdcl/*.py | wc -l --> 981 lines you can read.
 
 ## The ceiling, which is a theorem
 
