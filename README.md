@@ -88,9 +88,14 @@ Random 3-SAT at ratio 4.26 — the phase transition, where instances are hardest
  200 vars,  852 clauses:  4,184 ms   22,725 conflicts
 ```
 
+`python -m cdcl bench` prints the first three rows; the 200-variable run is not
+in it, because at that size the run stops being a benchmark and starts being a
+wait. (The same command also verifies a pigeonhole proof, which takes several
+minutes on its own — it is not a quick command.)
+
 That is *pure Python*. MiniSat does 200 variables in single-digit milliseconds and
 this is not a competitor to anything — a real solver is C++ and thirty years of
-tuning. What it is, is complete and correct and 920 lines you can read.
+tuning. What it is, is complete and correct and 981 lines you can read.
 
 ## The ceiling, which is a theorem
 
